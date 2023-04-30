@@ -31,9 +31,10 @@ public List<Product> GetProductList(string category)
 }
 ```
 
-The first method above is completely async - even with the `await Task.Delay(400)` instead of `Thread.Sleep`.  Both methods do exactly the same
-thing except for the async nature of the first method and the
-syncrhonous nature of the second.
+The first method above is completely async - even with use of
+`await Task.Delay(400)` instead of `Thread.Sleep`.  Both methods
+do exactly the same thing except for the async nature of the
+first method and the synchronous nature of the second.
 
 ## Performance Testing
 
