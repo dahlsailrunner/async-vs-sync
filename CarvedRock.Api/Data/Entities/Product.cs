@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace CarvedRock.Data.Entities
+namespace CarvedRock.Api.Data.Entities
 {
     public class Product
     {

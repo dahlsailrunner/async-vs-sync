@@ -52,8 +52,8 @@ internal class Program
 
         NBomberRunner
             .RegisterScenarios(  // comment out scenarios you don't want to run below
-                scenario
-                //asyncScenario
+                //scenario
+                asyncScenario
                 )
             .Run();
     }

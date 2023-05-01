@@ -1,7 +1,8 @@
-﻿using CarvedRock.Data.Entities;
+﻿using CarvedRock.Api.Data;
+using CarvedRock.Api.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarvedRock.Data;
+namespace CarvedRock.Api.Repository;
 
 public class CarvedRockRepository : ICarvedRockRepository
 {

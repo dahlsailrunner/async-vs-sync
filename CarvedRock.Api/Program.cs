@@ -1,10 +1,11 @@
-using CarvedRock.Data;
-using CarvedRock.Domain;
 using Hellang.Middleware.ProblemDetails;
 using Serilog;
 using Serilog.Enrichers.Span;
 using Serilog.Exceptions;
 using System.Reflection;
+using CarvedRock.Api.BusinessLogic;
+using CarvedRock.Api.Data;
+using CarvedRock.Api.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();

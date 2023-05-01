@@ -1,4 +1,4 @@
-﻿namespace CarvedRock.Data.Entities
+﻿namespace CarvedRock.Api.Data.Entities
 {
     public class ProductRating
     {

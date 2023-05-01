@@ -1,6 +1,6 @@
-﻿using CarvedRock.Data.Entities;
+﻿using CarvedRock.Api.Data.Entities;
 
-namespace CarvedRock.Data
+namespace CarvedRock.Api.Repository
 {
     public interface ICarvedRockRepository
     {

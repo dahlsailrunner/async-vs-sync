@@ -1,8 +1,7 @@
-﻿using CarvedRock.Data.Entities;
+﻿using CarvedRock.Api.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
-namespace CarvedRock.Data
+namespace CarvedRock.Api.Data
 {
     public class LocalContext : DbContext
     {

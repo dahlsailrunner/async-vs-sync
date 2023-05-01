@@ -1,5 +1,5 @@
-using CarvedRock.Core;
-using CarvedRock.Domain;
+using CarvedRock.Api.BusinessLogic;
+using CarvedRock.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarvedRock.Api.Controllers;

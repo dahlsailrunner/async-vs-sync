@@ -1,4 +1,4 @@
-﻿namespace CarvedRock.Core
+﻿namespace CarvedRock.Api.Models
 {
     public class LocationInventory
     {

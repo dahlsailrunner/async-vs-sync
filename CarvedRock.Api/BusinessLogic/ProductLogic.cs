@@ -1,8 +1,9 @@
-using CarvedRock.Core;
+using CarvedRock.Api.Data.Entities;
+using CarvedRock.Api.Models;
+using CarvedRock.Api.Repository;
 using CarvedRock.Data;
-using CarvedRock.Data.Entities;
 
-namespace CarvedRock.Domain;
+namespace CarvedRock.Api.BusinessLogic;
 
 public class ProductLogic : IProductLogic
 {

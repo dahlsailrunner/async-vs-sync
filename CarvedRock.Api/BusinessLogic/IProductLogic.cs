@@ -1,6 +1,6 @@
-using CarvedRock.Core;
+using CarvedRock.Api.Models;
 
-namespace CarvedRock.Domain;
+namespace CarvedRock.Api.BusinessLogic;
 
 public interface IProductLogic 
 {
