@@ -8,5 +8,6 @@ namespace CarvedRock.Api.Repository
         List<Product> GetProductList(string category);
         Task<Product?> GetProductByIdAsync(int id);
         Product? GetProductById(int id);
+        Task<string> GetSequentialLongQuery(int sequenceNumber, CancellationToken token = default);
     }
 }

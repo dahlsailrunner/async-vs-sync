@@ -1,9 +1,11 @@
-# Sync vs Async and NBomber
+# Sync vs Async, NBomber, and Cancellation Tokens
 
 This repo is meant for simple exploration of how using asynchronous
-code porovides better performance under load than synchronous code
-does.
+code provides better performance under load than synchronous code
+does and a little about how cancellation tokens can be used to avoid
+continued processing of long read operations when requests are canceled.
 
+## Sync vs Async
 It has two API controller actions:
 
 * `GET /Product`: Uses async code for everything
@@ -80,6 +82,87 @@ The command above will run the NBomber test against the API.
 It will display some standard output about the tests as they
 run but it will also create some reports in the `reports` directory
 that summarize the results as it finishes.
+
+## Cancellation Tokens
+
+This API contains a third controller called `LongReadController` to demonstrate
+the usefulness of cancellation tokens.
+
+The `GET` controller action is simple:
+
+```C#
+[HttpGet]
+public async Task<string> Get(bool includeCancellation, CancellationToken token)
+{
+    if (!includeCancellation)
+    {
+        token = CancellationToken.None;
+    }
+    return await _longReadLogic.GetSequentialLongQueryAsync(token);
+}
+```
+
+The `includeCancellation` parameter is ONLY meant to help this demo - you
+would generally not use it in a real API.  It's only purpose is to allow
+the caller to specify whether the real cancellation token should be used
+when calling the `GetSequentialLongQueryAsync` method.
+
+The `LongReadLogic` class has a single method that makes 10 calls to a 
+repository method that will sleep for a second per call and write a log
+entry:
+
+```C#
+public async Task<string> GetSequentialLongQuery(int sequenceNumber, CancellationToken token = default)
+{
+    await Task.Delay(1000, token); // simulates long single query
+    Log.Information($"Query {sequenceNumber} completed.");
+    return $"Query {sequenceNumber} completed.\n";
+}
+```
+
+If you execute the `GET https://localhost:7213/LongRead` endpoint, the logging output
+(and the API response) will look like this, and the log entries will happen about a second
+apart from each other due to the `await Task.Delay(1000, token)` line:
+
+```txt
+Query 1 completed.
+Query 2 completed.
+Query 3 completed.
+Query 4 completed.
+Query 5 completed.
+Query 6 completed.
+Query 7 completed.
+Query 8 completed.
+Query 9 completed.
+Query 10 completed.
+```
+
+### Enter Cancellation Tokens
+
+Without using cancellation tokens, any time the API endpoint
+is called, it will run all 10 iterations of the query.  With cancellation tokens, if 
+a request is canceled the iterating query execution will stop at the point of cancellation
+and no further iterations will be executed.
+
+This is beneficial because under high-load environments you're not wasting any time / resources /
+compute to execute queries whose results will never be used.
+
+### Testing Cancellation Tokens
+
+To test this, you can use the `includeCancellation` parameter on 
+the `GET https://localhost:7213/LongRead` and then you also need to actually 
+cancel the request.  
+
+* Use a tool like [Postman](https://www.postman.com/) or [Insomnia](https://insomnia.rest/) to make the request and cancel the request while it's running
+* Use the Swagger UI from a ***browser that isn't hooked to your IDE*** and either close the tab/browser while the
+request is running or navigate to a new URL in the tab -- in either case the browser sends a cancellation
+request. (If your Swagger UI browser is connected to the IDE while debugging closing the browser 
+will stop the debugger)
+* Use the REST Client extension in VS Code (click the spinning "Waiting" icon) or Rider and 
+cancel the request while it's running (this feature appears to be missing within Visual Studio HTTP file support)
+
+What you should see in the log output is that the API execution of the queries stops at the point
+of cancellation and that an HTTP status of `499 Client Closed Request` is returned to the caller.
 
 ## VS Code Setup
 

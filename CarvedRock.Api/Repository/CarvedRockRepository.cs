@@ -1,6 +1,7 @@
 ﻿using CarvedRock.Api.Data;
 using CarvedRock.Api.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace CarvedRock.Api.Repository;
 
@@ -37,5 +38,12 @@ public class CarvedRockRepository : ICarvedRockRepository
     {
         Thread.Sleep(50); // simulates heavy query
         return _ctx.Products.Find(id);
+    }
+
+    public async Task<string> GetSequentialLongQuery(int sequenceNumber, CancellationToken token = default)
+    {
+        await Task.Delay(1000, token); // simulates long single query
+        Log.Information($"Query {sequenceNumber} completed.");
+        return $"Query {sequenceNumber} completed.\n";
     }
 }
