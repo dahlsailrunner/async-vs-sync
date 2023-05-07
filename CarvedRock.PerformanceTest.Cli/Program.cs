@@ -1,4 +1,6 @@
 ﻿using System.CommandLine;
+using CarvedRock.PerformanceTest.Cli;
+using NBomber.CSharp;
 
 var (baseUriOption, injectionRateOption) = DefineGlobalOptions();
 
@@ -8,14 +10,20 @@ var rootCommand = new RootCommand("CarvedRock Performance Test CLI")
     injectionRateOption
 };
 
-rootCommand.SetHandler(DoSomething, baseUriOption, injectionRateOption);
+rootCommand.SetHandler(RunPerformanceTest, baseUriOption, injectionRateOption);
 
 await rootCommand.InvokeAsync(args);
 
-void DoSomething(Uri uriArgument, int injectionRate)
+void RunPerformanceTest(Uri baseUri, int injectionRate)
 {
-    Console.WriteLine($"The base URL is {uriArgument}");
-    Console.WriteLine($"The injection rate is {injectionRate} requests per second");
+    var httpClient = new HttpClient();
+    var urlFormat = $"{baseUri}Product?category={{0}}"; // category provided dynamically/randomly
+
+    var scenario = NBomberHelper.GetScenario("ASYNC requests", 
+        urlFormat, injectionRate, httpClient);
+
+    NBomberRunner.RegisterScenarios(scenario)
+        .Run();
 }
 
 (Option<Uri> BaseUrlOption, Option<int> InjectionRateOption) DefineGlobalOptions()

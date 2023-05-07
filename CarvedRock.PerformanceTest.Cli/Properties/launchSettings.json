@@ -2,7 +2,7 @@
   "profiles": {
     "CarvedRock.PerformanceTest.Cli": {
       "commandName": "Project",
-      "commandLineArgs": "-h"
+      "commandLineArgs": "-u \"https://localhost:7213\" -r 100"
     }
   }
 }
