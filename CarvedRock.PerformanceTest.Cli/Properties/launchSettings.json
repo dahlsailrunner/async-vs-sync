@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CarvedRock.PerformanceTest.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "-h"
+    }
+  }
+}

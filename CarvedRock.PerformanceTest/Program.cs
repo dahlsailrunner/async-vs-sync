@@ -47,8 +47,11 @@ internal class Program
             return await Http.Send(httpClient, clientArgs, request);
         });
 
-        asyncScenario = asyncScenario.WithLoadSimulations(Simulation.Inject(rate: 100, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30)));
-        scenario = scenario.WithLoadSimulations(Simulation.Inject(rate: 100, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30)));
+        asyncScenario = asyncScenario.WithLoadSimulations(Simulation.Inject(rate: 100, 
+            interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30)));
+        
+        scenario = scenario.WithLoadSimulations(Simulation.Inject(rate: 100, 
+            interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(30)));
 
         NBomberRunner
             .RegisterScenarios(  // comment out scenarios you don't want to run below
