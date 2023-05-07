@@ -4,22 +4,31 @@ using NBomber.CSharp;
 
 var (baseUriOption, injectionRateOption) = DefineGlobalOptions();
 
-var rootCommand = new RootCommand("CarvedRock Performance Test CLI")
-{
-    baseUriOption,
-    injectionRateOption
-};
+var rootCommand = new RootCommand("CarvedRock Performance Test CLI");
+rootCommand.AddGlobalOption(baseUriOption);
+rootCommand.AddGlobalOption(injectionRateOption);
 
-rootCommand.SetHandler(RunPerformanceTest, baseUriOption, injectionRateOption);
+var asyncCommand = new Command("async", "Run load test against the async API endpoint");
+asyncCommand.SetHandler((baseUri, injRate) =>
+    RunPerformanceTest(baseUri, injRate, "ASYNC scenario", "Product?category={0}"),
+    baseUriOption, injectionRateOption);
+
+rootCommand.AddCommand(asyncCommand);
+
+var syncCommand = new Command("sync", "Run load test against the synchronous API endpoint");
+syncCommand.SetHandler((baseUri, injRate) =>
+        RunPerformanceTest(baseUri, injRate, "SYNCHRONOUS scenario", "SyncProduct?category={0}"),
+    baseUriOption, injectionRateOption);
+rootCommand.AddCommand(syncCommand);
 
 await rootCommand.InvokeAsync(args);
 
-void RunPerformanceTest(Uri baseUri, int injectionRate)
+void RunPerformanceTest(Uri baseUri, int injectionRate, string scenarioName, string apiRoute)
 {
     var httpClient = new HttpClient();
-    var urlFormat = $"{baseUri}Product?category={{0}}"; // category provided dynamically/randomly
+    var urlFormat = $"{baseUri}{apiRoute}"; // category provided dynamically/randomly
 
-    var scenario = NBomberHelper.GetScenario("ASYNC requests", 
+    var scenario = NBomberHelper.GetScenario(scenarioName,
         urlFormat, injectionRate, httpClient);
 
     NBomberRunner.RegisterScenarios(scenario)
